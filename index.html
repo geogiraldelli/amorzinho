@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo do Amor</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #fff0f6;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #d50064;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar-container {
+            background-color: #f8b5d1;
+            border-radius: 25px;
+            margin: 20px 0;
+            height: 30px;
+            width: 100%;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            background-color: #e91e63;
+            border-radius: 25px;
+            transition: width 0.5s ease;
+        }
+
+        .page {
+            display: none;
+            padding: 20px;
+            text-align: center;
+            transition: opacity 0.5s ease;
+        }
+
+        .page.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .elogio {
+            background-color: #f8b5d1;
+            border: none;
+            color: #fff;
+            font-size: 1.2em;
+            padding: 20px;
+            margin: 10px;
+            border-radius: 15px;
+            cursor: pointer;
+            width: 250px;
+            transition: background-color 0.3s;
+            display: inline-block;
+        }
+
+        .elogio:hover {
+            background-color: #e91e63;
+        }
+
+        .heart {
+            font-size: 1.5em;
+            color: red;
+            margin-left: 5px;
+        }
+
+        .envelope {
+            display: none;
+            width: 150px;
+            margin: 50px auto;
+            position: relative;
+            cursor: pointer;
+            animation: bounce 1s infinite alternate;
+        }
+
+        .envelope img {
+            width: 100%;
+        }
+
+        @keyframes bounce {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-10px); }
+        }
+
+        .message {
+            display: none;
+            margin-top: 20px;
+            font-size: 1.5em;
+            color: #d50064;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .open-envelope {
+            display: none;
+            animation: openEnvelope 2s forwards;
+        }
+
+        @keyframes openEnvelope {
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* Ajustes para dispositivos móveis */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .elogio {
+                width: 200px;
+                font-size: 1em;
+            }
+
+            .progress-bar-container {
+                height: 25px;
+            }
+
+            .progress-bar {
+                height: 100%;
+            }
+
+            .message {
+                font-size: 1.2em;
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            h1 {
+                font-size: 1.2em;
+            }
+
+            .elogio {
+                width: 180px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Joguinho para o meu amorzinho ❤️ </h1>
+        <p>Complete a barra de progresso clicando nos elogios!</p>
+
+        <div class="progress-bar-container">
+            <div id="progressBar" class="progress-bar"></div>
+        </div>
+
+        <!-- Página de Elogios -->
+        <div class="page active" id="page1">
+            <button class="elogio" onclick="nextPage(16, 1)">Seu sorriso! <span class="heart">❤️</span></button>
+        </div>
+
+        <div class="page" id="page2">
+            <button class="elogio" onclick="nextPage(16, 2)">Seu jeitinho! <span class="heart">❤️</span></button>
+        </div>
+
+        <div class="page" id="page3">
+            <button class="elogio" onclick="nextPage(16, 3)">Seu coração lindo! <span class="heart">❤️</span></button>
+        </div>
+
+        <div class="page" id="page4">
+            <button class="elogio" onclick="nextPage(16, 4)">A forma como me trata e como me elogia <span class="heart">❤️</span></button>
+        </div>
+
+        <div class="page" id="page5">
+            <button class="elogio" onclick="nextPage(16, 5)">Os nossos sonhos em comum <span class="heart">❤️</span></button>
+        </div>
+
+        <div class="page" id="page6">
+            <button class="elogio" onclick="nextPage(16, 6)">Como você fica fofa quando eu te elogio <span class="heart">❤️</span></button>
+        </div>
+
+        <div class="page" id="page6">
+        <button class="elogio" onclick="nextPage(16, 7)">Crepúsculo <span class="heart">❤️</span></button>
+        </div>
+
+        <!-- Envelope e mensagem -->
+        <div class="envelope" id="envelope" onclick="openEnvelope()">
+            <img src="envelope.png" alt="Envelope" />
+        </div>
+
+        <div class="message" id="finalMessage">
+            <p>Obrigada por ser você, obrigada por ser tão incrível. Quero passar o resto da minha vida com você! <3</p>
+        </div>
+    </div>
+
+    <script>
+        let progress = 0;
+        let currentPage = 1;
+        const totalPages = 6;
+        const progressStep = 16;  // 100% dividido por 6 elogios
+
+        function nextPage(progressValue, pageNumber) {
+            progress += progressValue;
+            if (progress > 100) progress = 100; // Limita a progressão a 100%
+            
+            document.getElementById('progressBar').style.width = progress + '%';
+
+            // Esconde a página atual e mostra a próxima
+            document.getElementById('page' + pageNumber).classList.remove('active');
+            currentPage++;
+            if (currentPage <= totalPages) {
+                document.getElementById('page' + currentPage).classList.add('active');
+            } else {
+                document.getElementById('envelope').style.display = 'block'; // Mostra o envelope quando terminar
+            }
+        }
+
+        function openEnvelope() {
+            document.getElementById('envelope').classList.add('open-envelope');
+            document.getElementById('finalMessage').style.display = 'block';
+        }
+    </script>
+
+</body>
+</html>
